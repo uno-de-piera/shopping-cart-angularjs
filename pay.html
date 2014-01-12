@@ -1,0 +1,46 @@
+<div class="row">
+<div class="large-12 columns">
+	<table class="large-12 columns">
+		<thead>
+		    <tr>
+		      <th>Id</th>
+		      <th>Nombre</th>
+		      <th>Cantidad</th>
+		      <th>Precio unidad</th>
+		      <th>Total producto</th>
+		      <th>Eliminar</th>
+		    </tr>
+		</thead>
+		<tbody>		  	
+		    <tr ng-repeat="prod in udpShopContent">
+		      <td>{{prod.id}}</td>
+		      <td>{{prod.name}}</td>
+		      <td>{{prod.qty}}</td>
+		      <td>{{roundCurrency(prod.price)}}</td>
+		      <td>{{roundCurrency(prod.price * prod.qty)}}</td>
+		      <td><a class="button alert" ng-click="remove(prod.id)">Eliminar</a></td>
+		    </tr>
+		    <tr>
+		    	<td colspan="6">Precio total del carrito: {{ roundCurrency(udpShopTotalPrice) }}</td>
+		    <tr>
+		    <tr>
+		    	<td colspan="6">Número total de artículos: {{ udpShopTotalProducts }}</td>
+		    <tr>
+		    <tr>
+		    	<td colspan="6">
+		    		<a href="#/" class="button success large-12">
+		    			Ir a la página principal
+		    		</a>
+		    		<a ng-disabled="udpShopContent.length < 1" class="button alert large-12" ng-click="destroy()">
+		    			Destroy
+		    		</a>	
+		    	</td>
+		    <tr>	
+		  </tbody>
+		</table>
+		<!--añadimos nuestro formulario de paypal-->
+		<form name="cart" action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post" id="formPaypal">
+            {{ paypalData() }}
+    	</form>
+    </div>
+</div>
