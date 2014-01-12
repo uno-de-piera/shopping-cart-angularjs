@@ -1,4 +1,4 @@
-shopping-cart-angularjs
+Simple shopping cart with angularjs and paypal
 =======================
 
 Shopping cart for AngularJS with paypal
