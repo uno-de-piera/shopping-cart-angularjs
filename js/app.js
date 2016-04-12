@@ -1,5 +1,5 @@
 //creamos el modulo y le inyectamos el modulo ngRoute y el modulo cart que hemos creado
-var app = angular.module("app", ['ngRoute','ng-Shop']);
+var app = angular.module("app", ['ngRoute','ng-Shop', 'ngStorage']);
 
 //las rutas que vamos a utilizar para nuestro ejemplo
 app.config(function($routeProvider)

@@ -9,7 +9,7 @@ var shop = angular.module('ng-Shop', []);
 
 //nuestra factoria se llamará $shop, inyectamos $rootScope
 //devuleve un objeto con toda la funcionalidad que debe tener un carrito
-shop.factory('$shop', ['$rootScope', function ($rootScope)
+shop.factory('$shop', ['$rootScope', '$sessionStorage', function ($rootScope, $sessionStorage)
 {
 	/**
 	* @var array con el contenido del carrito
@@ -23,6 +23,14 @@ shop.factory('$shop', ['$rootScope', function ($rootScope)
 	* @var integer con el número de artículos del carrito
 	*/
 	$rootScope.udpShopTotalProducts = 0;
+	/**
+	* @desc - añade los productos almacenados en $sessionStorage al carrito
+	*/
+	if($sessionStorage.udpShopTotalProducts != undefined){
+		$rootScope.udpShopContent = angular.fromJson($sessionStorage.udpShopContent)
+		$rootScope.udpShopTotalPrice = parseFloat($sessionStorage.udpShopTotalPrice);
+		$rootScope.udpShopTotalProducts = parseInt($sessionStorage.udpShopTotalProducts);
+	}
 
 	return{
 		/**
@@ -74,6 +82,7 @@ shop.factory('$shop', ['$rootScope', function ($rootScope)
 				{
 					$rootScope.udpShopTotalPrice += parseFloat(producto.price * producto.qty,10);
 					$rootScope.udpShopTotalProducts += producto.qty;
+					this.setSessionStorage();
 					return {"msg":"updated"};
 				}
 				//en otro caso, lo añadimos al carrito
@@ -82,6 +91,7 @@ shop.factory('$shop', ['$rootScope', function ($rootScope)
 					$rootScope.udpShopTotalPrice += parseFloat(producto.price * producto.qty,10);
 					$rootScope.udpShopTotalProducts += producto.qty;
 					$rootScope.udpShopContent.push(producto);
+					this.setSessionStorage();
 					return {"msg":"insert"};
 				}
 			}
@@ -125,6 +135,7 @@ shop.factory('$shop', ['$rootScope', function ($rootScope)
 			        	$rootScope.udpShopTotalPrice -= parseFloat($rootScope.udpShopContent[i].price * $rootScope.udpShopContent[i].qty,10);
 			        	$rootScope.udpShopTotalProducts -= $rootScope.udpShopContent[i].qty;
 			        	$rootScope.udpShopContent.splice(i, 1);
+			        	this.setSessionStorage();
 			        	if(isNaN($rootScope.udpShopTotalPrice))
 			        	{
 			        		$rootScope.udpShopTotalPrice = 0;
@@ -148,6 +159,7 @@ shop.factory('$shop', ['$rootScope', function ($rootScope)
 				$rootScope.udpShopContent = [];
 				$rootScope.udpShopTotalPrice = 0;
 				$rootScope.udpShopTotalProducts = 0;
+				$sessionStorage.$reset();
 			}
 			catch(error)
 			{
@@ -186,6 +198,15 @@ shop.factory('$shop', ['$rootScope', function ($rootScope)
         	htmlForm += "<img border='0' src='https://www.paypal.com/es_ES/i/scr/pixel.gif' width='1' height='1' />";
 			
 			$(userData.formClass).html("").append(htmlForm);
+		},
+		/**
+		* @desc - añade los prodcutos del carrito a $sesionStorage
+		*/
+		setSessionStorage: function()
+		{
+			$sessionStorage.udpShopTotalPrice  = $rootScope.udpShopTotalPrice.toString();
+			$sessionStorage.udpShopTotalProducts = $rootScope.udpShopTotalProducts.toString();
+			$sessionStorage.udpShopContent = angular.toJson($rootScope.udpShopContent);
 		}
 	};
 }]);
